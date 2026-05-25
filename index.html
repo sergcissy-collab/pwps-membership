@@ -419,10 +419,24 @@
         gov_id_number: form.gov_id_number.value,
         child_name_1: form.child_name_1.value,
         child_dob_1: form.child_dob_1.value,
-        child_gender_1: form.child_gender_1.value
+        child_gender_1: form.child_gender_1.value,
+file_name: null,
+file_data: null,
+file_type: null,
       };
-
-      try {
+      try {const fileInput = document.getElementById('id-upload');
+if (fileInput.files.length > 0) {
+  const file = fileInput.files[0];
+  data.file_name = file.name;
+  data.file_type = file.type;
+  const reader = new FileReader();
+  await new Promise((resolve) => {
+    reader.onload = (ev) => {
+      data.file_data = ev.target.result.split(',')[1]; // base64 only
+      resolve();
+    };
+    reader.readAsDataURL(file);
+  });
         await fetch('https://script.google.com/macros/s/AKfycbwfgS7YDUmOwN9-DkIqJXTzIEljfpQLlRICMBj-9yXF0SxqsACQqKwyIuJteqe-N51PSA/exec', {
           method: 'POST',
           mode: 'no-cors',
