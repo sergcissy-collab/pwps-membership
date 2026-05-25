@@ -120,7 +120,9 @@
       font-size: 13px;
       color: #333;
       font-family: Arial, sans-serif;
+      white-space: nowrap;
     }
+    .ssn-container button:hover { background: #e8e8e4; }
     .radio-group { display: flex; align-items: center; gap: 8px; margin: 5px 0; font-size: 14px; font-family: Arial, sans-serif; }
     .note { font-size: 12px; color: #888; margin-bottom: .75rem; font-style: italic; font-family: Arial, sans-serif; }
     .child-header-row {
@@ -379,105 +381,105 @@
   </footer>
 
   <script>
-    // SSN toggle & auto-format
+    // ─── SSN: toggle visibility ───────────────────────────────────────────────
     const toggleBtn = document.getElementById('toggle-btn');
-    const ssnInput = document.getElementById('ssn-input');
+    const ssnInput  = document.getElementById('ssn-input');
+
     toggleBtn.addEventListener('click', () => {
-      if (ssnInput.type === 'password') { 
-        ssnInput.type = 'text';
-        toggleBtn.textContent = 'Hide'; }
-      else { 
-        ssnInput.type = 'password'; 
-        toggleBtn.textContent = 'Show';
-      }
+      const isPassword = ssnInput.type === 'password';
+      ssnInput.type        = isPassword ? 'text' : 'password';
+      toggleBtn.textContent = isPassword ? 'Hide' : 'Show';
     });
+
+    // ─── SSN: auto-format as XXX-XX-XXXX ─────────────────────────────────────
+    // FIX: preserve the current type before setting .value, then restore it.
+    // Some browsers reset type="text" back to "password" when .value is set
+    // programmatically on a password input, breaking the toggle.
     ssnInput.addEventListener('input', () => {
+      const currentType = ssnInput.type;          // ← save current visibility
       let v = ssnInput.value.replace(/\D/g, '');
       if (v.length > 3) v = v.slice(0, 3) + '-' + v.slice(3);
       if (v.length > 6) v = v.slice(0, 6) + '-' + v.slice(6);
       ssnInput.value = v.slice(0, 11);
+      ssnInput.type  = currentType;               // ← restore after value write
     });
-    // Form submission → Google Apps Script
-    const form = document.getElementById('pwpForm');
-    const submitBtn = document.getElementById('submitBtn');
+
+    // ─── Form submission ──────────────────────────────────────────────────────
+    // FIX: single unified handler; the original code had two separate
+    // addEventListener('submit') calls, with the real data-gathering and
+    // Google Apps Script fetch dangling outside the first handler's try block
+    // (so it never actually ran).
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwfgS7YDUmOwN9-DkIqJXTzIEljfpQLlRICMBj-9yXF0SxqsACQqKwyIuJteqe-N51PSA/exec';
+
+    const form       = document.getElementById('pwpForm');
+    const submitBtn  = document.getElementById('submitBtn');
     const successMsg = document.getElementById('successMsg');
-    const errorMsg = document.getElementById('errorMsg');
+    const errorMsg   = document.getElementById('errorMsg');
+
     form.addEventListener('submit', async function (e) {
-  e.preventDefault();
-  // 1. Prepare UI for submission
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Submitting...';
-  successMsg.style.display = 'none';
-  errorMsg.style.display = 'none';
-  // 2. Gather form data
-  const formData = new FormData(form);
-  try {
-    // 3. Make the actual network request
-    const response = await fetch('YOUR_SUBMIT_URL', {
-      method: 'POST',
-      body: formData, // or JSON.stringify(Object.fromEntries(formData)) if your API requires JSON
-    });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    // 4. Handle success
-    successMsg.style.display = 'block';
-    form.reset(); // Clear the form fields if appropriate
-  } catch (error) {
-    // 5. Handle errors
-    console.error('Submission error:', error);
-    errorMsg.style.display = 'block'; 
-  } finally {
-    // 6. Always re-enable the button, win or lose
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Submit';
-  }
-});
+      e.preventDefault();
+
+      // 1. Prepare UI
+      submitBtn.disabled    = true;
+      submitBtn.textContent = 'Submitting…';
+      successMsg.style.display = 'none';
+      errorMsg.style.display   = 'none';
+
+      // 2. Gather all form fields into a plain object
       const data = {
-        full_name: form.full_name.value,
-        dob: form.dob.value,
-        address: form.address.value,
-        phone: form.phone.value,
-        email: form.email.value,
-        ssn: form.ssn.value,
-        status: [...form.querySelectorAll('input[name="status"]')].find(r => r.checked)?.value || '',
-        custody: [...form.querySelectorAll('input[name="custody"]')].find(r => r.checked)?.value || '',
-        gov_id_type: form.gov_id_type.value,
+        full_name:    form.full_name.value,
+        dob:          form.dob.value,
+        address:      form.address.value,
+        phone:        form.phone.value,
+        email:        form.email.value,
+        ssn:          form.ssn.value,
+        status:       [...form.querySelectorAll('input[name="status"]')].find(r => r.checked)?.value  || '',
+        custody:      [...form.querySelectorAll('input[name="custody"]')].find(r => r.checked)?.value || '',
+        gov_id_type:  form.gov_id_type.value,
         gov_id_number: form.gov_id_number.value,
-        child_name_1: form.child_name_1.value,
-        child_dob_1: form.child_dob_1.value,
+        child_name_1:   form.child_name_1.value,
+        child_dob_1:    form.child_dob_1.value,
         child_gender_1: form.child_gender_1.value,
-file_name: null,
-file_data: null,
-file_type: null,
+        file_name: null,
+        file_data: null,
+        file_type: null,
       };
-      try {const fileInput = document.getElementById('id-upload');
-if (fileInput.files.length > 0) {
-  const file = fileInput.files[0];
-  data.file_name = file.name;
-  data.file_type = file.type;
-  const reader = new FileReader();
-  await new Promise((resolve) => {
-    reader.onload = (ev) => {
-      data.file_data = ev.target.result.split(',')[1]; // base64 only
-      resolve();
-    };
-    reader.readAsDataURL(file);
-  });
-        await fetch('https://script.google.com/macros/s/AKfycbwfgS7YDUmOwN9-DkIqJXTzIEljfpQLlRICMBj-9yXF0SxqsACQqKwyIuJteqe-N51PSA/exec', {
-          method: 'POST',
-          mode: 'no-cors',
+
+      // 3. Read file as base64 if one was selected
+      try {
+        const fileInput = document.getElementById('id-upload');
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          data.file_name = file.name;
+          data.file_type = file.type;
+          data.file_data = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload  = ev => resolve(ev.target.result.split(',')[1]); // base64 only
+            reader.onerror = ()  => reject(new Error('File read failed'));
+            reader.readAsDataURL(file);
+          });
+        }
+
+        // 4. Send to Google Apps Script
+        await fetch(APPS_SCRIPT_URL, {
+          method:  'POST',
+          mode:    'no-cors',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
+          body:    JSON.stringify(data),
         });
+
+        // 5. Success
         form.reset();
         successMsg.style.display = 'block';
-        submitBtn.textContent = 'Submit application';
-        submitBtn.disabled = false;
+
       } catch (err) {
+        console.error('Submission error:', err);
         errorMsg.style.display = 'block';
+
+      } finally {
+        // 6. Always restore the button
+        submitBtn.disabled    = false;
         submitBtn.textContent = 'Submit application';
-        submitBtn.disabled = false;
       }
     });
   </script>
