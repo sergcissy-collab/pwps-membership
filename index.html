@@ -383,8 +383,13 @@
     const toggleBtn = document.getElementById('toggle-btn');
     const ssnInput = document.getElementById('ssn-input');
     toggleBtn.addEventListener('click', () => {
-      if (ssnInput.type === 'password') { ssnInput.type = 'text'; toggleBtn.textContent = 'Hide'; }
-      else { ssnInput.type = 'password'; toggleBtn.textContent = 'Show'; }
+      if (ssnInput.type === 'password') { 
+        ssnInput.type = 'text';
+        toggleBtn.textContent = 'Hide'; }
+      else { 
+        ssnInput.type = 'password'; 
+        toggleBtn.textContent = 'Show';
+      }
     });
     ssnInput.addEventListener('input', () => {
       let v = ssnInput.value.replace(/\D/g, '');
@@ -392,20 +397,42 @@
       if (v.length > 6) v = v.slice(0, 6) + '-' + v.slice(6);
       ssnInput.value = v.slice(0, 11);
     });
-
     // Form submission → Google Apps Script
     const form = document.getElementById('pwpForm');
     const submitBtn = document.getElementById('submitBtn');
     const successMsg = document.getElementById('successMsg');
     const errorMsg = document.getElementById('errorMsg');
-
     form.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting...';
-      successMsg.style.display = 'none';
-      errorMsg.style.display = 'none';
-
+  e.preventDefault();
+  // 1. Prepare UI for submission
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+  successMsg.style.display = 'none';
+  errorMsg.style.display = 'none';
+  // 2. Gather form data
+  const formData = new FormData(form);
+  try {
+    // 3. Make the actual network request
+    const response = await fetch('YOUR_SUBMIT_URL', {
+      method: 'POST',
+      body: formData, // or JSON.stringify(Object.fromEntries(formData)) if your API requires JSON
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    // 4. Handle success
+    successMsg.style.display = 'block';
+    form.reset(); // Clear the form fields if appropriate
+  } catch (error) {
+    // 5. Handle errors
+    console.error('Submission error:', error);
+    errorMsg.style.display = 'block'; 
+  } finally {
+    // 6. Always re-enable the button, win or lose
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit';
+  }
+});
       const data = {
         full_name: form.full_name.value,
         dob: form.dob.value,
